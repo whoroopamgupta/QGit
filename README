@@ -1,0 +1,42 @@
+import React,{useState, useEffect} from "react";
+import ReactDOM from 'react-dom/client'
+import './index.css'
+
+const url = "https://api.dictionaryapi.dev/api/v2/entries/en/hello"
+
+const APITutorial = ()=>{
+
+  const [data,setData] = useState([])
+
+  const fetchData = async()=>{
+    const response = await fetch(url);
+    const arr = await response.json();
+    setData(arr[0].meanings)
+    // console.log(arr);
+  }
+
+  useEffect(()=>{
+    fetchData()
+  },[])
+
+    return(
+      <>
+        {data.map((item, index)=>{
+          const {partOfSpeech,definitions} = item;
+          return <ul key={index}>
+            <li>{partOfSpeech}</li>
+            <div>
+              {definitions.map((definition,id)=>{
+                return(
+                  <li>{definition.definition}</li>
+                )
+              })}
+            </div>
+          </ul>
+        })}
+      </>
+    )
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'))
+root.render(<APITutorial/>)
